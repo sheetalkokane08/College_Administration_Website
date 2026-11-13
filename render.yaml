@@ -1,0 +1,40 @@
+# One-click deploy on Render: New + -> Blueprint -> pick your GitHub repo.
+services:
+  - type: web
+    name: college-website
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: APP_NAME
+        value: College Website
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: CACHE_DRIVER
+        value: file
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase: { name: college-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: college-db, property: port }
+      - key: DB_DATABASE
+        fromDatabase: { name: college-db, property: database }
+      - key: DB_USERNAME
+        fromDatabase: { name: college-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: college-db, property: password }
+      - key: SEED_DB
+        value: "true"   # set to "false" after the first successful deploy
+
+databases:
+  - name: college-db
+    plan: free
